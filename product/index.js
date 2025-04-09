@@ -32,6 +32,7 @@ const verifyRole = (allowedRoles) => async (req, res, next) => {
         const message =
             err.response?.data?.message || "Authorizationnnn failed";
         console.log("Authorization failed : Insufficient permissions.");
+        console.log(err);
         return res.status(status).json({ message });
     }
 };

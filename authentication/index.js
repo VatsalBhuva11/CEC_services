@@ -131,7 +131,7 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/verify", async (req, res) => {
-    const token = req.headers.authorization?.split(" ")[1]; // Expecting: Bearer <token>
+    const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
         return res.status(401).json({
@@ -156,11 +156,9 @@ app.post("/verify", async (req, res) => {
 });
 
 app.post("/verifyRole", async (req, res) => {
+    console.log("Verifying role...");
     const token = req.headers?.authorization?.split(" ")[1];
-    const { roles } = req.body;
-    console.log("Coming here!");
-    console.log("token: ", token);
-    console.log("roles: ", roles);
+    const roles = req.body.roles;
     if (!token) return res.status(401).json({ message: "Unauthorized" });
 
     try {

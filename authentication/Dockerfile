@@ -7,6 +7,9 @@ WORKDIR /usr/src/app/authentication
 # Copy package files first to install dependencies
 COPY package*.json ./
 
+RUN curl -I https://registry.npmjs.org
+
+
 # Install dependencies
 RUN npm install
 
