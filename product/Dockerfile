@@ -11,10 +11,10 @@ COPY package*.json ./
 RUN npm install
 
 # Copy the rest of the app source code
-COPY . .
+# COPY . .   not required now since local filesystem is mounted directly in container.
 
 # Expose the port (ensure this matches your .env PORT)
 EXPOSE 3001
 
 # Start the service
-CMD ["node", "index.js"]
+CMD ["npm", "start"]

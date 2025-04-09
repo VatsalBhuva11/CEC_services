@@ -45,7 +45,7 @@ app.get("/products", async (req, res) => {
     try {
         const cachedData = await redis.get(cacheKey);
         if (cachedData) {
-            console.log("Fetched from cache!");
+            console.log("Fetched from redis cache!");
             return res.status(200).json(JSON.parse(cachedData));
         }
 

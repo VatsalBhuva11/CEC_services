@@ -7,17 +7,14 @@ WORKDIR /usr/src/app/authentication
 # Copy package files first to install dependencies
 COPY package*.json ./
 
-RUN curl -I https://registry.npmjs.org
-
-
 # Install dependencies
 RUN npm install
 
 # Copy the rest of the app files
-COPY . .
+# COPY . .
 
 # Expose the port (ensure it matches process.env.PORT, e.g. 3000)
 EXPOSE 3000
 
 # Start the server
-CMD ["node", "index.js"]
+CMD ["npm", "start"]
