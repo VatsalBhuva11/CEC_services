@@ -2,7 +2,7 @@
 FROM node:latest
 
 # Create app directory
-WORKDIR /usr/src/app/authentication
+WORKDIR /app/authentication
 
 # Copy package files first to install dependencies
 COPY package*.json ./
@@ -11,7 +11,7 @@ COPY package*.json ./
 RUN npm install
 
 # Copy the rest of the app files
-# COPY . .
+COPY . .
 
 # Expose the port (ensure it matches process.env.PORT, e.g. 3000)
 EXPOSE 3000
