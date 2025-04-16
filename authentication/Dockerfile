@@ -2,7 +2,7 @@
 FROM node:latest
 
 # Create app directory
-WORKDIR /app/authentication
+WORKDIR /usr/src/app/authentication
 
 # Copy package files first to install dependencies
 COPY package*.json ./

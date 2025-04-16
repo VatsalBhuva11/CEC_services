@@ -2,7 +2,7 @@
 FROM node:latest
 
 # Create and set the working directory
-WORKDIR /app/product
+WORKDIR /usr/src/app/product
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
