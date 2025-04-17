@@ -12,7 +12,7 @@ This is a microservices-based e-commerce backend application designed with modul
 ecommerce-backend/
 ├── docker-compose.yml      # Orchestration of all services
 ├── .gitignore              # Ignore node_modules, .env, etc.
-│
+├── architecture-diagram.png
 ├── authentication/         # Authentication microservice
 │ ├── db.js                 # MongoDB connection
 │ ├── index.js              # Entry point for auth-service
@@ -33,6 +33,12 @@ ecommerce-backend/
 └── volumes/
 └── mongo-data/             # Volume for MongoDB persistence
 ```
+
+---
+
+## Architecture Diagram
+
+![Architecture Diagram](./architecture-diagram.png)
 
 ---
 
