@@ -184,3 +184,31 @@ The entire system is orchestrated using Docker Compose. Each service runs in its
     -   `http://localhost:3001/` for the `product` service
 
 ---
+
+## Script for Kubernetes 
+
+```bash
+# Set docker env (if building inside Minikube)
+minikube start
+
+# Create namespace
+kubectl apply -f k8s/namespace.yaml
+
+# Deploy services
+kubectl apply -f k8s/mongodb.yaml
+kubectl apply -f k8s/redis.yaml
+kubectl apply -f k8s/auth-service.yaml
+kubectl apply -f k8s/product-service.yaml
+
+# Apply autoscalers
+kubectl apply -f k8s/auth-hpa.yaml
+kubectl apply -f k8s/product-hpa.yaml
+
+# Enable ingress
+minikube addons enable ingress
+kubectl apply -f k8s/ingress.yaml
+minikube tunnel
+```
+**Access the APIs**
+    -   `http://localhost/auth` for the `authentication` service
+    -   `http://localhost/product` for the `product` service
