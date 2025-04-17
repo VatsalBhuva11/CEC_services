@@ -185,7 +185,133 @@ The entire system is orchestrated using Docker Compose. Each service runs in its
 
 ---
 
-## Script for Kubernetes 
+## Kubernetes Setup
+
+This project includes Kubernetes manifests to deploy and manage all microservices in a custom namespace called `ecommerce`.
+
+### 1. `namespace.yaml`
+
+**Purpose:**  
+Defines a custom namespace `ecommerce` in which all other resources will be deployed.  
+Namespaces logically isolate Kubernetes resources within the cluster.
+
+---
+
+### 2. `auth-service.yaml`
+
+**Purpose:**  
+Combines the Deployment and Service for the authentication microservice.
+
+#### Deployment:
+
+-   Runs multiple replicas of the `auth-service` container.
+-   Includes environment variables such as `PORT`, `JWT_SECRET`.
+-   Mounted under the `ecommerce` namespace.
+-   Ensures restart and rescheduling on failure.
+
+#### Service:
+
+-   Exposes the auth pods internally using a `ClusterIP` service.
+-   Used by other services (like `product-service`) to reach the authentication API by hostname.
+
+---
+
+### 3. `auth-hpa.yaml`
+
+**Purpose:**  
+Defines a Horizontal Pod Autoscaler for the `auth-service`.
+
+**What it does:**
+
+-   Automatically scales the number of replicas based on CPU usage.
+-   Keeps the number of pods between a defined min/max range (e.g., 1–5).
+-   Requires resource limits to be set in the deployment for autoscaling to work.
+
+---
+
+### 4. `product-service.yaml`
+
+**Purpose:**  
+Defines the Deployment and Service for the product microservice.
+
+#### Deployment:
+
+-   Launches the `product-service` container.
+-   Injects environment variables like `PORT` and `REDIS_HOST`.
+-   Handles REST APIs related to product CRUD.
+
+#### Service:
+
+-   Exposes the product pods on a specific port inside the cluster.
+-   Used by the Ingress controller to reach the product service.
+
+---
+
+### 5. `product-hpa.yaml`
+
+**Purpose:**  
+Scales the number of product-service pods horizontally.
+
+**Key Features:**
+
+-   Target CPU utilization defined (e.g., 80%).
+-   Defines min/max replica count.
+-   Keeps the product service performant under varying load.
+
+---
+
+### 6. `mongodb.yaml`
+
+**Purpose:**  
+Defines the Deployment and Service for MongoDB.
+
+#### Deployment:
+
+-   Pulls the official MongoDB image.
+-   Runs a single replica with optional persistent storage (PVC not included here).
+-   Starts MongoDB for both auth and product services to connect.
+
+#### Service:
+
+-   Exposes MongoDB via a `ClusterIP` service on port `27017` for internal access.
+
+---
+
+### 7. `redis.yaml`
+
+**Purpose:**  
+Defines the Deployment and Service for Redis.
+
+#### Deployment:
+
+-   Uses the official Redis image.
+-   Provides in-memory data store functionality for the product service.
+
+#### Service:
+
+-   Internal `ClusterIP` service on port `6379`.
+
+---
+
+### 8. `ingress.yaml`
+
+**Purpose:**  
+Defines an Ingress resource to route external traffic to internal services.
+
+**What it does:**
+
+-   Uses an NGINX Ingress Controller provided by Minikube or Kubernetes.
+-   Maps hostnames and paths to their respective services.
+-   Optionally supports TLS for HTTPS.
+
+#### Example Routing Rules:
+
+-   `/auth` → Forwards traffic to `auth-service` on port `3000`.
+-   `/products` → Forwards traffic to `product-service` on port `3001`.
+
+---
+
+## Script for Kubernetes
 
 ```bash
 # Set docker env (if building inside Minikube)
@@ -209,6 +335,7 @@ minikube addons enable ingress
 kubectl apply -f k8s/ingress.yaml
 minikube tunnel
 ```
-**Access the APIs**
-    -   `http://localhost/auth` for the `authentication` service
-    -   `http://localhost/product` for the `product` service
+
+**Access the APIs** - `http://localhost/auth` for the `authentication` service - `http://localhost/product` for the `product` service
+
+---
